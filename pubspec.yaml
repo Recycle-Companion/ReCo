@@ -17,6 +17,10 @@ dependencies:
   tflite_flutter: ^0.9.1
   camera:
   image:
+  google_maps_flutter: ^2.5.3
+  flutter_polyline_points: ^2.0.0
+  dio: ^5.4.0
+
 
 
 dev_dependencies:

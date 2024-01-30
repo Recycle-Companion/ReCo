@@ -9,6 +9,10 @@
 .buildlog/
 .history
 .svn/
+.env.dart
+**/AppDelegate.swift
+**/AndroidManifest.xml
+
 
 # IntelliJ related
 *.iml

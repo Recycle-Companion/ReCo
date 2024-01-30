@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:reco/.env.dart';
 import 'package:reco/model/directions_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class DirectionsRepository {
   static const String _baseUrl =
