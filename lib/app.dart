@@ -19,9 +19,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Solution App",
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primaryColor: Colors.white),
       home: Scaffold(
         appBar: AppBar(
           toolbarHeight: 40,
