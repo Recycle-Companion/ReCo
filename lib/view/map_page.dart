@@ -82,6 +82,7 @@ class _MapPageState extends State<MapPage> {
                 ))
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.black,

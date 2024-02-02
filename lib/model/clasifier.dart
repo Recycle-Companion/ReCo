@@ -9,6 +9,8 @@ class Classifier {
 
   static const String modelFile = "model.tflite";
 
+  static const int image_size = 180;
+
   /// Loads interpreter from asset
   Future<void> loadModel({Interpreter? interpreter}) async {
     try {
@@ -28,31 +30,31 @@ class Classifier {
   Interpreter get interpreter => _interpreter;
 
   Future<DetectionClasses> predict(img.Image image) async {
-    img.Image resizedImage = img.copyResize(image, width: 180, height: 180);
+    img.Image resizedImage = img.copyResize(image, width: image_size, height: image_size);
 
-    // Convert the resized image to a 1D Float32List.
-    Float32List inputBytes = Float32List(1 * 180 * 180 * 3);
-    int pixelIndex = 0;
+    List<double> inputBytes = List<double>.empty(growable: true);
+
     for (int y = 0; y < resizedImage.height; y++) {
       for (int x = 0; x < resizedImage.width; x++) {
         var pixel = resizedImage.getPixel(x, y);
-        inputBytes[pixelIndex++] = pixel.r.toDouble();
-        inputBytes[pixelIndex++] = pixel.g.toDouble();
-        inputBytes[pixelIndex++] = pixel.b.toDouble();
+        inputBytes.add(pixel.r.toDouble());
+        inputBytes.add(pixel.g.toDouble());
+        inputBytes.add(pixel.b.toDouble());
       }
     }
 
-    final output = Float32List(1 * 6).reshape([1, 6]);
+    var output = List<double>.filled(6, 0).reshape([1, 6]);
 
-    // Reshape to input format specific for model. 1 item in list with pixels 150x150 and 3 layers for RGB
-    final input = inputBytes.reshape([1, 180, 180, 3]);
+    var input = inputBytes.reshape([1, image_size, image_size, 3]);
+
     try {
       interpreter.run(input, output);
       final predictionResult = output[0] as List<double>;
       double maxElement = predictionResult.reduce(
-        (double maxElement, double element) =>
-            element > maxElement ? element : maxElement,
+            (double maxElement, double element) =>
+        element > maxElement ? element : maxElement,
       );
+
       return DetectionClasses.values[predictionResult.indexOf(maxElement)];
     } catch (e) {
       print(e);
