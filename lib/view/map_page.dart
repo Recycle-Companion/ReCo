@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reco/directions_repostory.dart';
 import 'package:reco/model/directions_model.dart';
+import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -11,20 +15,67 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  static const _initialCameraPosition = CameraPosition(
-      target: LatLng(39.92077, 32.85405), zoom: 15.5); //zoom level of camera
+  static const CameraPosition _initialCameraPosition =
+      CameraPosition(target: LatLng(39.92077, 32.85405), zoom: 15.5);
 
-  GoogleMapController? _googleMapController;
+  final Completer<GoogleMapController> _controller = Completer();
   Marker? _origin = Marker(markerId: MarkerId('origin'));
   Marker? _destination = Marker(markerId: MarkerId('destination'));
   Directions? _info;
 
+  final List<Marker> myMarker = [];
+  final List<Marker> markerList = const [
+    Marker(
+        markerId: MarkerId('First'),
+        position: LatLng(39.92077, 32.85405),
+        infoWindow: InfoWindow(title: 'My position'))
+  ];
+
   @override
-  void dispose() {
+  void initState() {
+    super.initState();
+    myMarker.addAll(markerList);
+    //packdata();
+  }
+
+  Future<Position> getUserLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) {
+      print('error$error');
+    });
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  packdata() {
+    getUserLocation().then((value) async {
+      print("My location");
+      print("${value.latitude} ${value.longitude}");
+
+      _origin = Marker(
+          markerId: const MarkerId('Second'),
+          position: LatLng(value.latitude, value.longitude),
+          infoWindow: const InfoWindow(
+            title: 'My location',
+          ));
+
+      CameraPosition cameraPosition = CameraPosition(
+          target: LatLng(value.latitude, value.longitude), zoom: 14);
+
+      final GoogleMapController controller = await _controller.future;
+
+      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      setState(() {});
+    });
+  }
+
+  @override
+  /*void dispose() {
     _googleMapController?.dispose();
     super.dispose();
   }
-
+  */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +86,7 @@ class _MapPageState extends State<MapPage> {
             initialCameraPosition: _initialCameraPosition,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
-            onMapCreated: (controller) => _googleMapController,
+            onMapCreated: (controller) => _controller.complete(controller),
             markers: {
               if (_origin != null) _origin!,
               if (_destination != null) _destination!
@@ -51,7 +102,7 @@ class _MapPageState extends State<MapPage> {
                       .toList(),
                 ),
             },
-            onLongPress: _addMarker,
+            onLongPress: _addDestinationMarker,
           ),
           if (_info != null)
             Positioned(
@@ -82,47 +133,42 @@ class _MapPageState extends State<MapPage> {
                 ))
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.black,
-        onPressed: () => _googleMapController?.animateCamera(
-          CameraUpdate.newCameraPosition(_initialCameraPosition),
-        ),
+        onPressed: () {
+          packdata();
+        },
         child: const Icon(Icons.center_focus_strong),
       ),
     );
   }
 
   void _addMarker(LatLng pos) async {
-    if (_origin == null || (_origin != null && _destination != null)) {
-      //origin is not set or Origin/Destination are both set
-      setState(() {
-        _origin = Marker(
-          markerId: const MarkerId('origin'),
-          infoWindow: const InfoWindow(title: 'Origin'),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: pos,
-        );
-        //Reset Destination and Info
-        _destination = null;
-        _info = null;
-      });
-    } else {
-      setState(() {
-        _destination = Marker(
-          markerId: const MarkerId('destination'),
-          infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          position: pos,
-        );
-        //_destination = null;
-      });
-      // Get directions
-      final directions = await DirectionsRepository()
-          .getDirections(origin: _origin!.position, destination: pos);
-      setState(() => _info = directions);
-    }
+    //origin is not set or Origin/Destination are both set
+    setState(() {
+      _origin = Marker(
+        markerId: const MarkerId('My Location'),
+        infoWindow: const InfoWindow(title: 'My Location'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        position: pos,
+      );
+    });
+  }
+
+  void _addDestinationMarker(LatLng pos) async {
+    setState(() {
+      _destination = Marker(
+        markerId: const MarkerId('destination'),
+        infoWindow: const InfoWindow(title: 'Destination'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        position: pos,
+      );
+      //_destination = null;
+    });
+    // Get directions
+    final directions = await DirectionsRepository()
+        .getDirections(origin: _origin!.position, destination: pos);
+    setState(() => _info = directions);
   }
 }

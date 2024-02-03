@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:reco/utils/classes.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -30,7 +29,8 @@ class Classifier {
   Interpreter get interpreter => _interpreter;
 
   Future<DetectionClasses> predict(img.Image image) async {
-    img.Image resizedImage = img.copyResize(image, width: image_size, height: image_size);
+    img.Image resizedImage =
+        img.copyResize(image, width: image_size, height: image_size);
 
     List<double> inputBytes = List<double>.empty(growable: true);
 
@@ -51,8 +51,8 @@ class Classifier {
       interpreter.run(input, output);
       final predictionResult = output[0] as List<double>;
       double maxElement = predictionResult.reduce(
-            (double maxElement, double element) =>
-        element > maxElement ? element : maxElement,
+        (double maxElement, double element) =>
+            element > maxElement ? element : maxElement,
       );
 
       return DetectionClasses.values[predictionResult.indexOf(maxElement)];
