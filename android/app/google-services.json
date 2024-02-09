@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "921519706344",
+    "project_id": "reco-cbcfc",
+    "storage_bucket": "reco-cbcfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921519706344:android:4614b4f2e6173c58deb95d",
+        "android_client_info": {
+          "package_name": "com.example.reco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY48KrbXNGYDxzX-VILiMBzTE0HpcWYJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

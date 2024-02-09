@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reco/directions_repostory.dart';
 import 'package:reco/model/directions_model.dart';
-import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -19,8 +17,8 @@ class _MapPageState extends State<MapPage> {
       CameraPosition(target: LatLng(39.92077, 32.85405), zoom: 15.5);
 
   final Completer<GoogleMapController> _controller = Completer();
-  Marker? _origin = Marker(markerId: MarkerId('origin'));
-  Marker? _destination = Marker(markerId: MarkerId('destination'));
+  Marker? _origin = const Marker(markerId: MarkerId('origin'));
+  Marker? _destination = const Marker(markerId: MarkerId('destination'));
   Directions? _info;
 
   final List<Marker> myMarker = [];
@@ -35,7 +33,6 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     myMarker.addAll(markerList);
-    //packdata();
   }
 
   Future<Position> getUserLocation() async {
@@ -70,12 +67,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  @override
-  /*void dispose() {
-    _googleMapController?.dispose();
-    super.dispose();
-  }
-  */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +136,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _addMarker(LatLng pos) async {
-    //origin is not set or Origin/Destination are both set
     setState(() {
       _origin = Marker(
         markerId: const MarkerId('My Location'),
