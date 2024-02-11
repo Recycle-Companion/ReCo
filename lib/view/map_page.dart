@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reco/directions_repostory.dart';
 import 'package:reco/model/directions_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reco/model/re_point.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -21,18 +23,10 @@ class _MapPageState extends State<MapPage> {
   Marker? _destination = const Marker(markerId: MarkerId('destination'));
   Directions? _info;
 
-  final List<Marker> myMarker = [];
-  final List<Marker> markerList = const [
-    Marker(
-        markerId: MarkerId('First'),
-        position: LatLng(39.92077, 32.85405),
-        infoWindow: InfoWindow(title: 'My position'))
-  ];
-
   @override
   void initState() {
+    packdata();
     super.initState();
-    myMarker.addAll(markerList);
   }
 
   Future<Position> getUserLocation() async {
@@ -58,7 +52,7 @@ class _MapPageState extends State<MapPage> {
           ));
 
       CameraPosition cameraPosition = CameraPosition(
-          target: LatLng(value.latitude, value.longitude), zoom: 14);
+          target: LatLng(value.latitude, value.longitude), zoom: 15);
 
       final GoogleMapController controller = await _controller.future;
 
@@ -73,28 +67,48 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          GoogleMap(
-            initialCameraPosition: _initialCameraPosition,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            onMapCreated: (controller) => _controller.complete(controller),
-            markers: {
-              if (_origin != null) _origin!,
-              if (_destination != null) _destination!
-            },
-            polylines: {
-              if (_info != null)
-                Polyline(
-                  polylineId: const PolylineId('overview_polyline'),
-                  color: Colors.red,
-                  width: 5,
-                  points: _info!.polylinePoints
-                      .map((e) => LatLng(e.latitude, e.longitude))
-                      .toList(),
-                ),
-            },
-            onLongPress: _addDestinationMarker,
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('re_points').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const LinearProgressIndicator();
+
+              List<RePoint> points = snapshot.data!.docs.map((data) => RePoint.fromSnapshot(data)).toList();
+
+              List<Marker> markers = points.map((RePoint point) => Marker(
+                  markerId: MarkerId(point.name),
+                  position: LatLng(point.lat, point.lon),
+                  infoWindow: InfoWindow(title: point.name),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+              )).toList();
+
+              if (_origin != null) markers.add(_origin!);
+
+              return GoogleMap(
+                initialCameraPosition: _initialCameraPosition,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                onMapCreated: (controller) => _controller.complete(controller),
+                markers: markers.toSet(),
+                /*{
+                  if (_origin != null) _origin!,
+                  if (_destination != null) _destination!
+                },*/
+                polylines: {
+                  if (_info != null)
+                    Polyline(
+                      polylineId: const PolylineId('overview_polyline'),
+                      color: Colors.red,
+                      width: 5,
+                      points: _info!.polylinePoints
+                          .map((e) => LatLng(e.latitude, e.longitude))
+                          .toList(),
+                    ),
+                },
+                onLongPress: _addDestinationMarker,
+              );
+            }
           ),
+
           if (_info != null)
             Positioned(
                 top: 20.0,
@@ -124,13 +138,16 @@ class _MapPageState extends State<MapPage> {
                 ))
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.black,
-        onPressed: () {
-          packdata();
-        },
-        child: const Icon(Icons.center_focus_strong),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,50),
+        child: FloatingActionButton(
+          backgroundColor: const Color(0xff538f47),
+          foregroundColor: const Color(0xfff1f1f1),
+          onPressed: () {
+            packdata();
+          },
+          child: const Icon(Icons.center_focus_strong),
+        ),
       ),
     );
   }
