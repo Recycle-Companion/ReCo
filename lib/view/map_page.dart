@@ -79,6 +79,11 @@ class _MapPageState extends State<MapPage> {
                   position: LatLng(point.lat, point.lon),
                   infoWindow: InfoWindow(title: point.name),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                  onTap: () async {
+                    final directions = await DirectionsRepository()
+                        .getDirections(origin: _origin!.position, destination: LatLng(point.lat, point.lon));
+                    setState(() => _info = directions);
+                  }
               )).toList();
 
               if (_origin != null) markers.add(_origin!);
@@ -104,7 +109,7 @@ class _MapPageState extends State<MapPage> {
                           .toList(),
                     ),
                 },
-                onLongPress: _addDestinationMarker,
+                // onLongPress: _addDestinationMarker,
               );
             }
           ),

@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:reco/model/clasifier.dart';
+import 'package:reco/model/classifier.dart';
 import 'package:reco/utils/image_utils.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:reco/utils/classes.dart';
@@ -15,7 +15,7 @@ class ScanPage extends StatefulWidget {
 class _ScanPageState extends State<ScanPage> {
   late CameraController cameraController;
   late Interpreter interpreter;
-  final classifier = Classifier();
+  final predicter = Classifier();
 
   bool initialized = false;
   DetectionClasses detected = DetectionClasses.other;
@@ -30,7 +30,7 @@ class _ScanPageState extends State<ScanPage> {
   }
 
   Future<void> initialize() async {
-    await classifier.loadModel();
+    await predicter.loadModel();
 
     final cameras = await availableCameras();
     // Create a CameraController object
@@ -58,7 +58,7 @@ class _ScanPageState extends State<ScanPage> {
   Future<void> processCameraImage() async {
     final convertedImage = ImageUtils.convertYUV420ToImage(currentFrame);
 
-    final result = await classifier.predict(convertedImage);
+    final result = await predicter.predict(convertedImage);
 
     if (detected != result) {
       setState(() {
@@ -104,7 +104,7 @@ class _ScanPageState extends State<ScanPage> {
               ]),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                child: Text("Object  is : ${detected.label}"),
+                child: detected.container,//Text("Object  is : ${detected.label}"),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
