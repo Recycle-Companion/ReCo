@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reco/model/classifier.dart';
 import 'package:reco/view/map_page.dart';
 import 'package:reco/view/scan_page.dart';
+import 'dart:async';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -16,9 +18,20 @@ class _AppState extends State<App> {
   final Color dark = const Color(0xff538f47);
   final Color grey = const Color(0xff373737);
 
+  void scanPageCallback() {
+    currentIndex = 0;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screens = [const MapPage(), ScanPage()];
+
+    StreamController<int> streamController = StreamController();
+
+    final screens = [
+      MapPage(stream: streamController.stream,),
+      ScanPage(callback: scanPageCallback,)
+    ];
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -35,6 +48,15 @@ class _AppState extends State<App> {
           ),
           backgroundColor: light,
           centerTitle: true,
+          actions: [
+            if (currentIndex == 0) IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                Classifier.lastScanned = null;
+                streamController.add(0);
+              },
+            )
+          ],
         ),
         body: screens[currentIndex],
         extendBody: true,

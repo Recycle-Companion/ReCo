@@ -10,6 +10,8 @@ class Classifier {
 
   static const int image_size = 180;
 
+  static String? lastScanned;
+
   /// Loads interpreter from asset
   Future<void> loadModel({Interpreter? interpreter}) async {
     try {

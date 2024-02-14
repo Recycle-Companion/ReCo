@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reco/directions_repostory.dart';
+import 'package:reco/model/classifier.dart';
 import 'package:reco/model/directions_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reco/model/re_point.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({super.key, required this.stream});
+
+  final Stream<int> stream;
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -25,6 +28,10 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
+    widget.stream.listen((event) {
+      setState(() {});
+    });
+
     packdata();
     super.initState();
   }
@@ -73,6 +80,9 @@ class _MapPageState extends State<MapPage> {
               if (!snapshot.hasData) return const LinearProgressIndicator();
 
               List<RePoint> points = snapshot.data!.docs.map((data) => RePoint.fromSnapshot(data)).toList();
+              if (Classifier.lastScanned != null) {
+                points = points.where((point) => point.name == Classifier.lastScanned!).toList();
+              }
 
               List<Marker> markers = points.map((RePoint point) => Marker(
                   markerId: MarkerId(point.name),
@@ -94,10 +104,6 @@ class _MapPageState extends State<MapPage> {
                 zoomControlsEnabled: false,
                 onMapCreated: (controller) => _controller.complete(controller),
                 markers: markers.toSet(),
-                /*{
-                  if (_origin != null) _origin!,
-                  if (_destination != null) _destination!
-                },*/
                 polylines: {
                   if (_info != null)
                     Polyline(

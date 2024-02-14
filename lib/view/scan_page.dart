@@ -6,7 +6,9 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:reco/utils/classes.dart';
 
 class ScanPage extends StatefulWidget {
-  const ScanPage({super.key});
+  const ScanPage({super.key, required this.callback});
+
+  final void Function() callback;
 
   @override
   State<ScanPage> createState() => _ScanPageState();
@@ -106,12 +108,13 @@ class _ScanPageState extends State<ScanPage> {
                 padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                 child: detected.container,//Text("Object  is : ${detected.label}"),
               ),
-              Padding(
+              if (detected != DetectionClasses.other) Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                 child: ElevatedButton(
-                  child: Text("Go to Map"),
+                  child: const Text("Show On Map"),
                   onPressed: () {
-                    print("Going to map");
+                    Classifier.lastScanned = detected.label;
+                    widget.callback();
                   },
                 ),
               )
