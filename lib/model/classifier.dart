@@ -8,7 +8,7 @@ class Classifier {
 
   static const String modelFile = "model.tflite";
 
-  static const int image_size = 180;
+  static const int image_size = 224;
 
   static String? lastScanned;
 
@@ -45,7 +45,7 @@ class Classifier {
       }
     }
 
-    var output = List<double>.filled(6, 0).reshape([1, 6]);
+    var output = List<double>.filled(9, 0).reshape([1, 9]);
 
     var input = inputBytes.reshape([1, image_size, image_size, 3]);
 
