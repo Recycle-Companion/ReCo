@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
           ));
 
       CameraPosition cameraPosition = CameraPosition(
-          target: LatLng(value.latitude, value.longitude), zoom: 15);
+          target: LatLng(value.latitude, value.longitude), zoom: 16);
 
       final GoogleMapController controller = await _controller.future;
 
@@ -84,8 +84,9 @@ class _MapPageState extends State<MapPage> {
                 points = points.where((point) => point.name == Classifier.lastScanned!).toList();
               }
 
+              int id = 0;
               List<Marker> markers = points.map((RePoint point) => Marker(
-                  markerId: MarkerId(point.name),
+                  markerId: MarkerId('${id++}'),
                   position: LatLng(point.lat, point.lon),
                   infoWindow: InfoWindow(title: point.name),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),

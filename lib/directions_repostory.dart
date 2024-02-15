@@ -20,6 +20,7 @@ class DirectionsRepository {
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
+        'mode': 'walking',
         'key': googleAPIKey,
       },
     );
