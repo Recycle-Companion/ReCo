@@ -17,7 +17,7 @@ class ScanPage extends StatefulWidget {
 class _ScanPageState extends State<ScanPage> {
   late CameraController cameraController;
   late Interpreter interpreter;
-  final predicter = Classifier();
+  final predictor = Classifier();
 
   bool initialized = false;
   DetectionClasses detected = DetectionClasses.other;
@@ -32,7 +32,7 @@ class _ScanPageState extends State<ScanPage> {
   }
 
   Future<void> initialize() async {
-    await predicter.loadModel();
+    await predictor.loadModel();
 
     final cameras = await availableCameras();
     // Create a CameraController object
@@ -60,7 +60,7 @@ class _ScanPageState extends State<ScanPage> {
   Future<void> processCameraImage() async {
     final convertedImage = ImageUtils.convertYUV420ToImage(currentFrame);
 
-    final result = await predicter.predict(convertedImage);
+    final result = await predictor.predict(convertedImage);
 
     if (detected != result) {
       setState(() {
@@ -96,7 +96,7 @@ class _ScanPageState extends State<ScanPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: ElevatedButton(
-                      child: const Text("Take photo"),
+                      child: const Icon(Icons.camera_alt),//const Text("Take photo"),
                       onPressed: () {
                         processCameraImage();
                       },
@@ -104,14 +104,19 @@ class _ScanPageState extends State<ScanPage> {
                   ),
                 ),
               ]),
+
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                child: detected.container,//Text("Object  is : ${detected.label}"),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: detected.labelContainer,//Text("Object  is : ${detected.label}"),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: detected.promptContainer,//Text("Object  is : ${detected.label}"),
               ),
               if (detected != DetectionClasses.other) Padding(
-                padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: ElevatedButton(
-                  child: const Text("Show On Map"),
+                  child: const Text("Show Locations"),
                   onPressed: () {
                     Classifier.lastScanned = detected.label;
                     widget.callback();

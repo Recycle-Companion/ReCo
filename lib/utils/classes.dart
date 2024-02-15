@@ -29,26 +29,56 @@ extension DetectionClassesExtension on DetectionClasses {
   String get prompt {
     switch (this) {
       case DetectionClasses.cardboard:
-        return "Cardboard boxes and packaging can often be reused for storage, shipping, or moving purposes. They can also be creatively repurposed for arts and crafts projects or composted if they are made from uncoated, untreated cardboard.";
+        return "Cardboard boxes and packaging can be reused for storage, shipping, or crafts. They can also be composted if untreated.";
       case DetectionClasses.glass:
-        return "Glass containers, such as jars and bottles, can be washed and reused for storing food, beverages, or other items. They can also be creatively repurposed into decorations, candle holders, or even DIY crafts.";
+        return "Glass containers like jars and bottles can be washed and reused for storage or repurposed for decorations and crafts.";
       case DetectionClasses.metal:
-        return "Metal items like aluminum cans or steel containers can be cleaned and reused for their original purpose or repurposed into various DIY projects. Additionally, metal scraps can be collected and taken to scrap yards for recycling and reuse in manufacturing.";
+        return "Metal items like cans and containers can be reused or repurposed for DIY projects. Metal scraps can be recycled at scrap yards for manufacturing.";
       case DetectionClasses.paper:
-        return "Paper materials such as newspapers, magazines, and office paper can be reused for various purposes before recycling. For example, they can be used as packing material, shredded for animal bedding or composting, or repurposed for arts and crafts projects.";
+        return "Paper materials like newspapers, magazines, and office paper can be reused before recycling. They can serve as packing material, animal bedding, or be repurposed for arts and crafts.";
       case DetectionClasses.plastic:
-        return "While recycling plastic is important, some types of plastic items can also be washed and reused multiple times before recycling. For example, reusable plastic containers or water bottles can be refilled and used again instead of being disposed of after a single use. Additionally, some plastic products can be repurposed for different functions, such as using plastic bags as bin liners or for storage.";
+        return "Reusable plastic containers and bottles can be washed and reused multiple times. Plastic items like bags can be repurposed for storage or as bin liners.";
       default:
         return label;
     }
   }
 
-  Widget get container {
+  Widget get labelContainer {
     return Container(
-      height: 70,
+      height: 40,
       margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-          color: Colors.deepPurple.shade100,
+          color: Colors.green.shade100,
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepPurple.shade50,
+              offset: const Offset(0, 20),
+              blurRadius: 20,
+            ),
+          ]
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get promptContainer {
+    return Container(
+      height: 110,
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: [
             BoxShadow(
@@ -62,7 +92,7 @@ extension DetectionClassesExtension on DetectionClasses {
       child: Row(
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.fromLTRB(10, 0, 20, 0),
             child: Icon(Icons.info),
           ),
 
