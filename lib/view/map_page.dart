@@ -81,7 +81,7 @@ class _MapPageState extends State<MapPage> {
 
               List<RePoint> points = snapshot.data!.docs.map((data) => RePoint.fromSnapshot(data)).toList();
               if (Classifier.lastScanned != null) {
-                points = points.where((point) => point.name == Classifier.lastScanned!).toList();
+                points = points.where((point) => (point.name).contains(Classifier.lastScanned!)).toList();
               }
 
               int id = 0;
