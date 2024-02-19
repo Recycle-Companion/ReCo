@@ -45,7 +45,7 @@ class Classifier {
       }
     }
 
-    var output = List<double>.filled(9, 0).reshape([1, 9]);
+    var output = List<double>.filled(8, 0).reshape([1, 8]);
 
     var input = inputBytes.reshape([1, image_size, image_size, 3]);
 
