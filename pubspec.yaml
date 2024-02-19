@@ -25,7 +25,22 @@ dependencies:
   
   firebase_core: ^2.25.4
   cloud_firestore: ^4.15.4
-  
+
+  flutter_native_splash:
+  flutter_launcher_icons: ^0.13.1
+
+
+flutter_native_splash:
+  image: assets/logo_sqr.png
+  color: "#f1f1f1"
+
+flutter_launcher_icons:
+
+  android:
+    adaptive_icon_foreground: "assets/logo.png"
+    adaptive_icon_background: "#f1f1f1"
+  ios: true
+  image_path: "assets/logo_sqr.png"
 
 
 
@@ -34,6 +49,8 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+
+
 
 flutter:
   uses-material-design: true
