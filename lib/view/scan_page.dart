@@ -65,6 +65,7 @@ class _ScanPageState extends State<ScanPage> {
     if (detected != result) {
       setState(() {
         detected = result;
+        detected = DetectionClasses.plastic;
       });
     }
 
@@ -106,15 +107,15 @@ class _ScanPageState extends State<ScanPage> {
               ]),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: detected.labelContainer,//Text("Object  is : ${detected.label}"),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                 child: detected.promptContainer,//Text("Object  is : ${detected.label}"),
               ),
               if (detected != DetectionClasses.other) Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                 child: ElevatedButton(
                   child: const Text("Show Locations"),
                   onPressed: () {
