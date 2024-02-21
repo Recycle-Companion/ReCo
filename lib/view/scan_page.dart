@@ -65,7 +65,6 @@ class _ScanPageState extends State<ScanPage> {
     if (detected != result) {
       setState(() {
         detected = result;
-        detected = DetectionClasses.plastic;
       });
     }
 

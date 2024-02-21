@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum DetectionClasses { battery, biological, cardboard, glass, metal, paper, plastic, other }
+enum DetectionClasses { battery, biological, cardboard, clothes, glass, metal, paper, plastic, other }
 
 extension DetectionClassesExtension on DetectionClasses {
   String get label {
@@ -18,6 +18,8 @@ extension DetectionClassesExtension on DetectionClasses {
       case DetectionClasses.paper:
         return "Paper";
       case DetectionClasses.plastic:
+        return "Plastic";
+      case DetectionClasses.clothes:
         return "Plastic";
       case DetectionClasses.other:
         return "Other";
