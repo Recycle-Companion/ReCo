@@ -42,6 +42,13 @@ import GoogleMaps
   }
 }
 ```
+### Add Firebase
+Install the required command line tools. Then:
+```
+firebase login
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
 
 ### Run
 ```
