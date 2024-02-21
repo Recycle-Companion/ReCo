@@ -42,7 +42,8 @@ import GoogleMaps
   }
 }
 ```
-### Add Firebase
+### Add Firebase
+
 Install the required command line tools. Then:
 ```
 firebase login
