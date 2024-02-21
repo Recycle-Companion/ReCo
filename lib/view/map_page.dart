@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reco/directions_repostory.dart';
+import 'package:reco/model/directions_api.dart';
 import 'package:reco/model/classifier.dart';
 import 'package:reco/model/directions_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -183,7 +183,6 @@ class _MapPageState extends State<MapPage> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         position: pos,
       );
-      //_destination = null;
     });
     // Get directions
     final directions = await DirectionsRepository()

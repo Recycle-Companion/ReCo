@@ -92,27 +92,6 @@ class _AppState extends State<App> {
             ],
           ),
         )),
-
-        /*
-        BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showUnselectedLabels: false,
-          backgroundColor: Colors.green,
-          selectedItemColor: Colors.white,
-          currentIndex: currentIndex,
-          onTap: (index) => setState(() => (currentIndex = index)),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: 'Map',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner),
-              label: 'Scan',
-            ),
-          ],
-        ),
-        */
       ),
     );
   }

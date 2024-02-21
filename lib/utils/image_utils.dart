@@ -3,7 +3,7 @@ import 'package:image/image.dart' as imageLib;
 
 /// ImageUtils
 class ImageUtils {
-  /// Converts a [CameraImage] in YUV420 format to [imageLib.Image] in RGB format
+  /// Converts a image in YUV420 format to RGB format
   static imageLib.Image convertYUV420ToImage(CameraImage cameraImage) {
     final int width = cameraImage.width;
     final int height = cameraImage.height;
@@ -42,9 +42,5 @@ class ImageUtils {
     b = b.clamp(0, 255);
 
     return [r, g, b];
-    /*0xff000000 |
-    ((b << 16) & 0xff0000) |
-    ((g << 8) & 0xff00) |
-    (r & 0xff);*/
   }
 }
